@@ -78,36 +78,39 @@ class DhtController extends \yii\web\Controller
 
 
     public function actionSearch() {
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+       // \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
         //var_dump($data);
-  //       $filter = new DhtSearch($data);
-      //    $records = DhtData::find();
-          \Yii::$app->response->content = \Yii::$app->request->getRawBody();
-        //  if ($filter->beginDate && $filter->Date == null)
-        //     $records = $records->where(['>=','Created_at',$filter->beginDate]);
+        $filter = new DhtSearch($data);
+         $records = DhtData::find();
+         if ($filter->beginDate && !$filter->Date)
+            $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
 
-        // if ($filter->endDate && $filter->Date == null)
-        //     $records = $records->where(['<=','Created_at',$filter->endDate]);
+        if ($filter->endDate && !$filter->Date)
+            $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+        
 
-        // if ($filter->beginTemperature && $filter->Temperature == null)
-        //     $records = $records->where(['>=','Temperature',$filter->beginTemperature]);
+         if ($filter->beginTemperature && !$filter->Temperature)
+             $records = $records->andWhere(['>=','Temperature',$filter->beginTemperature]);
 
-        // if ($filter->endTemperature && $filter->Temperature == null)
-        //     $records = $records->where(['<=','Temperature',$filter->endTemperature]);
+        if ($filter->endTemperature && !$filter->Temperature)
+            $records = $records->andWhere(['<=','Temperature',$filter->endTemperature]);
 
-        // if ($filter->beginHumidity && $filter->Humidity == null )
-        //     $records = $records->where(['>=','Humidity',$filter->beginHumidity]);
+        if ($filter->beginHumidity && !$filter->Humidity)
+            $records = $records->andWhere(['>=','Humidity',$filter->beginHumidity]);
 
-        // if ($filter->endHumidity && $filter->Humidity == null)
-        //     $records = $records->where(['<=','Humidity',$filter->endHumidity]);
+        if ($filter->endHumidity && !$filter->Humidity)
+            $records = $records->andWhere(['<=','Humidity',$filter->endHumidity]);
         
         
-        // $records = $records->asArray()->all();
+        $records = $records->asArray()->all();
    
-        // header('Content-type:application/json');
-        // $json = JSON::encode($records);
+        header('Content-type:application/json');
+        $json = JSON::encode($records);
 
+        // \Yii::$app->response->content = \Yii::$app->request->getRawBody();
+        \Yii::$app->response->content =$json;
+        
         //var_dump($json);
     }
 
