@@ -48,7 +48,21 @@ $config = [
         ],
         'db' => $db,
         
-        
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
+            'showScriptName' => false,
+            'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'dht',
+                'extraPatterns' => [
+                    'GET addd' => 'addd',
+                    'POST add' => 'add',
+                    'POST search' => 'search',
+                    'PUT update' => 'update',
+                    'DELETE delete/<id:\d+>' => 'delete',
+                ]], 
+            ],
+        ],
         
     ],
     'params' => $params,
