@@ -25,28 +25,22 @@ class DhtController extends \yii\web\Controller
     }
 
     public function actionAdd() {
-        //$data = \Yii::$app->getRequest();
         \Yii::$app->response->format = Response::FORMAT_JSON;        
          $data = Json::decode(\Yii::$app->request->getRawBody());
-  //       \xdebug_break();
-      //   return 'echo';
          $dht = new DHtData();
          $dht->attributes = $data;
          $dht->save();
          header('Content-type:application/json');
-         
-        //  $dht2 = DHtData::find(18)->all();
-        //  var_dump($dht_2);
-         \Yii::$app->response->content = "{\"fasdf\":5}";
-        // var_dump($dht);
-       // echo 'Hello';
+        $res["result"] = true;
+        $result = Json::encode($res);
+         \Yii::$app->response->content = $result;
     }
 
-    public function actionUpdate() {
+    public function actionUpdate($id) {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
         $changed = false;
-        $dht = DHtData::findOne($data['id']);
+        $dht = DHtData::findOne($id);
 
         if ($data["Temperature"] != $dht->Temperature)
         {
@@ -62,13 +56,21 @@ class DhtController extends \yii\web\Controller
 
         if ($changed)
             $dht->save();
-        var_dump($dht);
+
+            $res["result"] = true;
+            $result = Json::encode($res);
+             \Yii::$app->response->content = $result;
+            
     }
+
 
     public function actionDelete($id) {
 
-        $dht = DHtData::findOne($data['id']);
+        $dht = DHtData::findOne($id);
         $dht->delete();
+        $res["result"] = true;
+        $result = Json::encode($res);
+         \Yii::$app->response->content = $result;
         //var_dump($id);
     }
 
@@ -76,9 +78,13 @@ class DhtController extends \yii\web\Controller
 
     }
 
-
+    /**
+     * This function return list of DHT11 data sorted by special filter
+     * 
+     * To make this function  owrk you must to create JSON array and put it in request body
+     */
     public function actionSearch() {
-       // \Yii::$app->response->format = Response::FORMAT_JSON;
+        \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
         //var_dump($data);
         $filter = new DhtSearch($data);
@@ -102,16 +108,30 @@ class DhtController extends \yii\web\Controller
         if ($filter->endHumidity && !$filter->Humidity)
             $records = $records->andWhere(['<=','Humidity',$filter->endHumidity]);
         
+        if ($filter->Humidity)
+            $records = $records->andWhere(['=','Humidity',$filter->Humidity]);
+        if ($filter->Temperature)
+            $records = $records->andWhere(['=','Temperature',$filter->Temperature]);
+        if ($filter->Date)
+            $records = $records->andWhere(['=',"Created_at",$filter->Date]);
         
         $records = $records->asArray()->all();
    
         header('Content-type:application/json');
         $json = JSON::encode($records);
 
-        // \Yii::$app->response->content = \Yii::$app->request->getRawBody();
+        \Yii::$app->response->content =$json;
+    }
+
+
+    public function actionGet($id) {
+        \Yii::$app->response->format = Response::FORMAT_JSON;        
+        $dht = DHtData::findOne($id);
+        $json = JSON::encode($dht);
+
         \Yii::$app->response->content =$json;
         
-        //var_dump($json);
+
     }
 
 }
