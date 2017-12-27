@@ -60,7 +60,9 @@ $config = [
                     'POST search' => 'search',
                     'PUT update/<id:\d+>' => 'update',
                     'DELETE delete/<id:\d+>' => 'delete',
-                    'POST get/<id:\d+>' => 'get',
+                    'POST last' => 'last',
+                    'POST get/<id:\d+>' => 'get'
+
                 ]], 
             ],
         ],

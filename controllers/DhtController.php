@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\dhtData;
-use app\models\dhtSearch;
+use app\models\DhtData;
+use app\models\DhtSearch;
 use yii\helpers\Json;
 use yii\web\Response;
 
@@ -126,12 +126,22 @@ class DhtController extends \yii\web\Controller
 
     public function actionGet($id) {
         \Yii::$app->response->format = Response::FORMAT_JSON;        
-        $dht = DHtData::findOne($id);
+        $dht = DhtData::findOne($id);
         $json = JSON::encode($dht);
 
         \Yii::$app->response->content =$json;
-        
-
     }
+
+    public function actionLast() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $max = DhtData::find()->max('id');
+        $dht = DhtData::findOne($max);
+        $json = JSON::encode($dht);
+
+        \Yii::$app->response->content = $json;
+    }
+
+
+
 
 }
