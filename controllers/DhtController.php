@@ -29,9 +29,9 @@ class DhtController extends \yii\web\Controller
          $data = Json::decode(\Yii::$app->request->getRawBody());
          $dht = new DHtData();
          $dht->attributes = $data;
-         $dht->save();
+         $op_result = $dht->save();
          header('Content-type:application/json');
-        $res["result"] = true;
+        $res["result"] = $op_result;
         $result = Json::encode($res);
          \Yii::$app->response->content = $result;
     }
@@ -54,12 +54,18 @@ class DhtController extends \yii\web\Controller
             $changed = true;
         }
 
-        if ($changed)
-            $dht->save();
+        if ($changed) {
+            $op_result = $dht->save();
 
-            $res["result"] = true;
+            $res["result"] = $op_result;
             $result = Json::encode($res);
-             \Yii::$app->response->content = $result;
+            \Yii::$app->response->content = $result;
+        } else {
+            $res["result"] = false;
+            $result = Json::encode($res);
+            \Yii::$app->response->content = $result;
+        }
+
             
     }
 
@@ -67,8 +73,8 @@ class DhtController extends \yii\web\Controller
     public function actionDelete($id) {
 
         $dht = DHtData::findOne($id);
-        $dht->delete();
-        $res["result"] = true;
+        $op_result = $dht->delete();
+        $res["result"] = $op_result;
         $result = Json::encode($res);
          \Yii::$app->response->content = $result;
         //var_dump($id);
