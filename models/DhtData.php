@@ -30,7 +30,7 @@ class DhtData extends \yii\db\ActiveRecord
     {
         return [
             [['Temperature', 'Humidity'], 'number'],
-            // [['Updated_at', 'Created_at'], 'safe'],
+             [['Updated_at', 'Created_at'], 'safe'],
         ];
     }
 
@@ -43,8 +43,8 @@ class DhtData extends \yii\db\ActiveRecord
             'id' => 'ID',
             'Temperature' => 'Temperature',
             'Humidity' => 'Humidity',
-            'Updated_at' => 'Updated At',
-            'Created_at' => 'Created At',
+            'Updated_at' => 'Updated_at',
+            'Created_at' => 'Created_at'
         ];
     }
 }

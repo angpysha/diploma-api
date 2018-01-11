@@ -61,7 +61,8 @@ $config = [
                     'PUT update/<id:\d+>' => 'update',
                     'DELETE delete/<id:\d+>' => 'delete',
                     'POST last' => 'last',
-                    'POST get/<id:\d+>' => 'get'
+                    'POST get/<id:\d+>' => 'get',
+                    'POST datecount' => 'datecount'
 
                 ]], 
             ],
