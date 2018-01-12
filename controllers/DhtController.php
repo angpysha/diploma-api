@@ -32,16 +32,7 @@ class DhtController extends \yii\web\Controller
         $dht->Humidity = $data["Humidity"];
         $dht->Created_at = date("Y-m-d H:i:s",strtotime($data["Created_at"]));
         $dht->Updated_at = date("Y-m-d H:i:s",strtotime($data["Updated_at"]));
-     //   $res = Json::encode($dht);
-      //  \Yii::$app->response->content = $res;
-
-//          \Yii::$app->response->content = \Yii::$app->request->getRawBody();
          $op_result = $dht->save();
-//         if ($op_result)
-//             \Yii::$app->response->content = true;
-//         else
-//             \Yii::$app->response->content = false;
-//       //  header('Content-type:application/json');
         $res["result"] = $op_result;
         $result = Json::encode($res);
          \Yii::$app->response->content = $result;
