@@ -64,7 +64,11 @@ $config = [
                     'POST get/<id:\d+>' => 'get',
                     'POST datecount' => 'datecount'
 
-                ]], 
+                ]],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
+                    'extraPatterns' => [
+                        'GET test' => 'test'
+                    ]],
             ],
         ],
         
