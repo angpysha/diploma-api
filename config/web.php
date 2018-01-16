@@ -67,7 +67,13 @@ $config = [
                 ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
                     'extraPatterns' => [
-                        'GET test' => 'test'
+                        'GET test' => 'test',
+                        'POST add' => 'add',
+                        'PUT update/<id:\d+>' => 'update',
+                        'DELETE delete/<id:\d+>' => 'delete',
+                        'POST last' => 'last',
+                        'POST get/<id:\d+>' => 'get',
+                        'POST search' => 'search',
                     ]],
             ],
         ],
