@@ -2,6 +2,11 @@
 
 namespace app\controllers;
 
+use app\Models\Bmp180;
+use app\models\BmpSearch;
+use yii\helpers\Json;
+use yii\web\Response;
+
 class BmpController extends \yii\web\Controller
 {
 //    public function actionIndex()
@@ -12,5 +17,133 @@ class BmpController extends \yii\web\Controller
     public function actionTest()
     {
         var_dump("zzzzz");
+    }
+
+    public function actionAdd()
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        $bmp = new Bmp180();
+        $bmp->Temperature = $data["Temperature"];
+        $bmp->Altitude = $data["Altitude"];
+        $bmp->Pressure = $data["Pressure"];
+        if ($data["Created_at"])
+            $bmp->Created_at = date("Y-m-d H:i:s", strtotime($data["Created_at"]));
+        else
+            $bmp->Created_at = date("Y-m-d H:i:s");
+        if ($data["Updated_at"])
+            $bmp->Updated_at = date("Y-m-d H:i:s", strtotime($data["Updated_at"]));
+        else
+            $bmp->Updated_at = date("Y-m-d H:i:s");
+        $op_result = $bmp->save();
+        $res["result"] = $op_result;
+        $result = Json::encode($res);
+        \Yii::$app->response->content = $result;
+    }
+
+    function actionUpdate($id) {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        $changed = false;
+        $bmp = Bmp180::findOne($id);
+
+        if ($data["Temperature"] != $bmp->Temperature)
+        {
+            $bmp->Temperature = $data["Temperature"];
+            $changed = true;
+        }
+
+        if ($data["Pressure"] != $bmp->Pressure)
+        {
+            $bmp->Pressure = $data["Pressure"];
+            $changed = true;
+        }
+
+        if ($data["Altitude"] != $bmp->Altitude)
+        {
+            $bmp->Altitude = $data["Altitude"];
+            $changed = true;
+        }
+
+        if ($changed) {
+            $op_result = $bmp->save();
+
+            $res["result"] = $op_result;
+            $result = Json::encode($res);
+            \Yii::$app->response->content = $result;
+        } else {
+            $res["result"] = false;
+            $result = Json::encode($res);
+            \Yii::$app->response->content = $result;
+        }
+    }
+
+    public function actionDelete($id) {
+
+        $bmp = Bmp180::findOne($id);
+        $op_result = $bmp->delete();
+        $res["result"] = $op_result;
+        $result = Json::encode($res);
+        \Yii::$app->response->content = $result;
+        //var_dump($id);
+    }
+
+
+    public function actionSearch() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        //var_dump($data);
+        $filter = new BmpSearch($data);
+        $records = Bmp180::find();
+        if ($filter->beginDate)
+            $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
+
+        if ($filter->endDate)
+            $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+
+
+        if ($filter->beginTemperature)
+            $records = $records->andWhere(['>=','Temperature',$filter->beginTemperature]);
+
+        if ($filter->endTemperature)
+            $records = $records->andWhere(['<=','Temperature',$filter->endTemperature]);
+
+        if ($filter->beginPressure)
+            $records = $records->andWhere(['>=','Pressure',$filter->beginPressure]);
+
+        if ($filter->endPressure)
+            $records = $records->andWhere(['<=','Pressure',$filter->endPressure]);
+
+        if ($filter->beginAltitude)
+            $records = $records->andWhere(['>=','Altitude',$filter->beginAltitude]);
+
+        if ($filter->endAltitude)
+            $records = $records->andWhere(['<=','Altitude',$filter->endAltitude]);
+
+
+        $records = $records->asArray()->all();
+
+        header('Content-type:application/json');
+        $json = JSON::encode($records);
+
+        \Yii::$app->response->content =$json;
+    }
+
+
+    public function actionGet($id) {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $bmp = Bmp180::findOne($id);
+        $json = JSON::encode($bmp);
+
+        \Yii::$app->response->content =$json;
+    }
+
+    public function actionLast() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $max = Bmp180::find()->max('id');
+        $bmp = Bmp180::findOne($max);
+        $json = JSON::encode($bmp);
+
+        \Yii::$app->response->content = $json;
     }
 }
