@@ -74,6 +74,7 @@ $config = [
                         'POST last' => 'last',
                         'POST get/<id:\d+>' => 'get',
                         'POST search' => 'search',
+                        'POST datecount' => 'datecount'
                     ]],
             ],
         ],

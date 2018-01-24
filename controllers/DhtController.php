@@ -150,10 +150,23 @@ class DhtController extends \yii\web\Controller
     }
 
     public function actionDatecount() {
-        $sql = "SELECT SUM(cc_count) as Temperature FROM PAGES";
-        $dht = DhtData::findBySql($sql)->all()[0]->Temperature;
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $min = (new \yii\db\Query())->select('*')
+            ->from('DhtData')
+            ->orderBy('Created_at')
+            ->limit('1')
+            ->all()[0]['Created_at'];
 
-        $result["pages"] = $dht;
+        $max=(new \yii\db\Query())->select('*')
+            ->from('DhtData')
+            ->orderBy('Created_at DESC')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+
+        $date1 = new \DateTime(date('Y-m-d',strtotime($min)));
+        $date2 = new \DateTime(date('Y-m-d',strtotime($max)));
+        $diff = $date1->diff($date2)->days;
+        $result["pages"] = $diff;
 
         $ret = Json::encode($result);
 

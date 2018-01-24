@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\Models\Bmp180;
+use app\models\Bmp180;
 use app\models\BmpSearch;
 use yii\helpers\Json;
 use yii\web\Response;
@@ -145,5 +145,28 @@ class BmpController extends \yii\web\Controller
         $json = JSON::encode($bmp);
 
         \Yii::$app->response->content = $json;
+    }
+
+    public function actionDatecount() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $min = (new \yii\db\Query())->select('*')
+                    ->from('Bmp180')
+                    ->orderBy('Created_at')
+                    ->limit('1')
+                    ->all()[0]['Created_at'];
+
+        $max=(new \yii\db\Query())->select('*')
+            ->from('Bmp180')
+            ->orderBy('Created_at DESC')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+//        $res['min'] = $min;
+//        $res['max'] = $max;
+        $date1 = new \DateTime(date('Y-m-d',strtotime($min)));
+        $date2 = new \DateTime(date('Y-m-d',strtotime($max)));
+        $diff = $date1->diff($date2)->days;
+        $result["pages"] = $diff;
+        \Yii::$app->response->content = Json::encode($result);
+//        var_dump($diff);
     }
 }
