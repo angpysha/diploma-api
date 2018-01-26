@@ -14,6 +14,7 @@ class BmpController extends \yii\web\Controller
 //        return $this->render('index');
 //    }
 
+    public $enableCsrfValidation = false;
     public function actionTest()
     {
         var_dump("zzzzz");
