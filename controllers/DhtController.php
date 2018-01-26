@@ -134,7 +134,8 @@ class DhtController extends \yii\web\Controller
 
 
     public function actionGet($id) {
-        \Yii::$app->response->format = Response::FORMAT_JSON;        
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
         $dht = DhtData::findOne($id);
         $json = JSON::encode($dht);
 
@@ -143,10 +144,49 @@ class DhtController extends \yii\web\Controller
 
     public function actionLast() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
-        $max = DhtData::find()->max('id');
-        $dht = DhtData::findOne($max);
-        $json = JSON::encode($dht);
+        $data = Json::decode(\Yii::$app->request->getRawBody());
 
+        if ($data) {
+            $filter = new DhtSearch($data);
+            $records = DhtData::find();
+            if ($filter->beginDate)
+                $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
+
+            if ($filter->endDate)
+                $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+
+            $records=$records->asArray()->orderBy('Created_at DESC')->all();
+            $max = $records[0];
+            $json = JSON::encode($max);
+        } else {
+            $max = DhtData::find()->max('id');
+            $dht = DhtData::findOne($max);
+            $json = JSON::encode($dht);
+        }
+        \Yii::$app->response->content = $json;
+    }
+
+    public function actionFirst() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        if ($data) {
+            $filter = new DhtSearch($data);
+            $records = DhtData::find();
+            if ($filter->beginDate)
+                $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
+
+            if ($filter->endDate)
+                $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+
+            $records=$records->asArray()->orderBy('Created_at')->all();
+
+            $max = $records[0];
+            $json = JSON::encode($max);
+        } else {
+            $max = DhtData::find()->min('id');
+            $dht = DhtData::findOne($max);
+            $json = JSON::encode($dht);
+        }
         \Yii::$app->response->content = $json;
     }
 

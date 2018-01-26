@@ -62,7 +62,8 @@ $config = [
                     'DELETE delete/<id:\d+>' => 'delete',
                     'POST last' => 'last',
                     'POST get/<id:\d+>' => 'get',
-                    'POST datecount' => 'datecount'
+                    'POST datecount' => 'datecount',
+                    'POST first' => 'first'
 
                 ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
@@ -74,7 +75,8 @@ $config = [
                         'POST last' => 'last',
                         'POST get/<id:\d+>' => 'get',
                         'POST search' => 'search',
-                        'POST datecount' => 'datecount'
+                        'POST datecount' => 'datecount',
+                        'POST first' => 'first'
                     ]],
             ],
         ],

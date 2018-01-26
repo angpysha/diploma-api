@@ -141,10 +141,47 @@ class BmpController extends \yii\web\Controller
 
     public function actionLast() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
-        $max = Bmp180::find()->max('id');
-        $bmp = Bmp180::findOne($max);
-        $json = JSON::encode($bmp);
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        if ($data) {
+            $filter = new BmpSearch($data);
+            $records = Bmp180::find();
+            if ($filter->beginDate)
+                $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
 
+            if ($filter->endDate)
+                $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+
+            $records = $records->asArray()->orderBy('Created_at DESC')->all();
+            $max = $records[0];
+            $json = JSON::encode($max);
+        } else {
+            $max = Bmp180::find()->max('id');
+            $bmp = Bmp180::findOne($max);
+            $json = JSON::encode($bmp);
+        }
+        \Yii::$app->response->content = $json;
+    }
+
+    public function actionFirst() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Json::decode(\Yii::$app->request->getRawBody());
+        if ($data) {
+            $filter = new BmpSearch($data);
+            $records = Bmp180::find();
+            if ($filter->beginDate)
+                $records = $records->andWhere(['>=','Created_at',$filter->beginDate]);
+
+            if ($filter->endDate)
+                $records = $records->andWhere(['<=','Created_at',$filter->endDate]);
+
+            $records = $records->asArray()->orderBy('Created_at')->all();
+            $max = $records[0];
+            $json = JSON::encode($max);
+        } else {
+            $max = Bmp180::find()->min('id');
+            $bmp = Bmp180::findOne($max);
+            $json = JSON::encode($bmp);
+        }
         \Yii::$app->response->content = $json;
     }
 
