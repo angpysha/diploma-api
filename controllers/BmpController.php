@@ -6,6 +6,8 @@ use app\models\Bmp180;
 use app\models\BmpSearch;
 use yii\helpers\Json;
 use yii\web\Response;
+use ElephantIO\Client;
+use ElephantIO\Engine\SocketIO\Version2X;
 
 class BmpController extends \yii\web\Controller
 {
@@ -13,7 +15,20 @@ class BmpController extends \yii\web\Controller
 //    {
 //        return $this->render('index');
 //    }
-
+    public function behaviors()
+    {
+        return ['access' => [
+            'class' => AccessControl::className(),
+            'rules' => [
+                [
+                    'allow' => true,
+                    'actions' => ['login', 'signup','add','search','update'
+                        ,'delete','last','get','datecount','first','firstlastdates'],
+                    'roles' => ['?'],
+                ]
+            ]
+        ]];
+    }
     public $enableCsrfValidation = false;
     public function actionTest()
     {
@@ -185,6 +200,19 @@ class BmpController extends \yii\web\Controller
         \Yii::$app->response->content = $json;
     }
 
+    public function actionFirstlastdates() {
+        $min = Bmp180::find()->min('id');
+        $bmp_min = Bmp180::findOne($min);
+        $max = Bmp180::find()->max('id');
+        $bmp_max = Bmp180::findOne($max);
+
+        $res["min"] = $bmp_min->Created_at;
+        $res["max"] = $bmp_max->Created_at;
+
+        return JSON::encode($res);
+
+    }
+
     public function actionDatecount() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $min = (new \yii\db\Query())->select('*')
@@ -206,5 +234,15 @@ class BmpController extends \yii\web\Controller
         $result["pages"] = $diff;
         \Yii::$app->response->content = Json::encode($result);
 //        var_dump($diff);
+    }
+
+
+
+    public function actionSendevent() {
+        $client = new Client(new Version2X('http://127.0.0.1:3000'));
+
+        $client->initialize();
+        $client->emit('test',['foo' => 'bar']);
+        $client->close();
     }
 }

@@ -63,7 +63,9 @@ $config = [
                     'POST last' => 'last',
                     'POST get/<id:\d+>' => 'get',
                     'POST datecount' => 'datecount',
-                    'POST first' => 'first'
+                    'POST first' => 'first',
+                    'POST firstlastdates' => 'firstlastdates',
+                    'GET index' => 'index'
 
                 ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
@@ -76,7 +78,9 @@ $config = [
                         'POST get/<id:\d+>' => 'get',
                         'POST search' => 'search',
                         'POST datecount' => 'datecount',
-                        'POST first' => 'first'
+                        'POST first' => 'first',
+                        'POST sendevent' => 'sendevent',
+                        'POST firstlastdates' => 'firstlastdates'
                     ]],
             ],
         ],
