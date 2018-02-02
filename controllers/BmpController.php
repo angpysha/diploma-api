@@ -8,13 +8,14 @@ use yii\helpers\Json;
 use yii\web\Response;
 use ElephantIO\Client;
 use ElephantIO\Engine\SocketIO\Version2X;
+use yii\filters\AccessControl;
 
 class BmpController extends \yii\web\Controller
 {
-//    public function actionIndex()
-//    {
-//        return $this->render('index');
-//    }
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
     public function behaviors()
     {
         return ['access' => [
@@ -23,7 +24,7 @@ class BmpController extends \yii\web\Controller
                 [
                     'allow' => true,
                     'actions' => ['login', 'signup','add','search','update'
-                        ,'delete','last','get','datecount','first','firstlastdates'],
+                        ,'delete','last','get','datecount','first','firstlastdates','','index'],
                     'roles' => ['?'],
                 ]
             ]

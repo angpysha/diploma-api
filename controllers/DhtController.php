@@ -6,6 +6,7 @@ use app\models\DhtData;
 use app\models\DhtSearch;
 use yii\helpers\Json;
 use yii\web\Response;
+use yii\filters\AccessControl;
 
 class DhtController extends \yii\web\Controller
 {
@@ -17,7 +18,7 @@ class DhtController extends \yii\web\Controller
                 [
                     'allow' => true,
                     'actions' => ['login', 'signup','add','search','update'
-                    ,'delete','last','get','datecount','first','firstlastdates'],
+                    ,'delete','last','get','datecount','first','firstlastdates','','index'],
                     'roles' => ['?'],
                 ]
             ]
