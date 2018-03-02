@@ -8,7 +8,18 @@
 
 namespace app\models;
 
-
+/** @SWG\Definition()
+ *
+ * @SWG\Property(property="id", type="integer")
+ * @SWG\Property(property="beginTemperature", type="number")
+ * @SWG\Property(property="endTemperature", type="number")
+ * @SWG\Property(property="beginPressure", type="number")
+ * @SWG\Property(property="endPressure", type="number")
+ * @SWG\Property(property="beginAltitude", type="number")
+ * @SWG\Property(property="endAltitude", type="number")
+ * @SWG\Property(property="beginDate", type="date")
+ * @SWG\Property(property="endDate", type="date")
+ */
 class BmpSearch
 {
     public $beginDate;

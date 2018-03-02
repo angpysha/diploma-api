@@ -14,6 +14,13 @@ use Yii;
  * @property string $Updated_at
  * @property string $Created_at
  */
+/**
+ * @SWG\Definition(required={"Temperature", "Pressure","Altitude"})
+ *
+ * @SWG\Property(property="Temperature", type="number")
+ * @SWG\Property(property="Pressure", type="number")
+ * @SWG\Property(property="Altitude", type="number")
+ */
 class Bmp180 extends \yii\db\ActiveRecord
 {
     /**

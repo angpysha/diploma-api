@@ -13,6 +13,12 @@ use Yii;
  * @property string $Updated_at
  * @property string $Created_at
  */
+/**
+ * @SWG\Definition(required={"Temperature", "Humidity"})
+ *
+ * @SWG\Property(property="Temperature", type="number")
+ * @SWG\Property(property="Humidity", type="number")
+ */
 class DhtData extends \yii\db\ActiveRecord
 {
     /**

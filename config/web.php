@@ -7,6 +7,24 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'modules' => [
+        'swagger' => [
+            'class' => \ignatenkovnikita\swagger\Module::class,
+            //  'url' => '@web/swagger.json',
+        //    'url' => 'http://petstore.swagger.io/v2/swagger.json',
+            'path' => '@app/controllers',
+            // disable page with your logic
+            'isDisable' => function () {
+                return false;
+            },
+            // replace placeholders in swagger content
+            'afterRender' => function ($content) {
+                $content = str_replace('{{host}}', 'http://diplomaapi:8081', $content);
+                $content = str_replace('{{basePath}}', '', $content);
+                return $content;
+            }
+        ]
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -26,6 +44,8 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'enableSession' => true,
+            'loginUrl' => null,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -53,10 +73,12 @@ $config = [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+
+
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'dht',
                 'extraPatterns' => [
                     'GET addd' => 'addd',
-                    'POST add' => 'add',
+                    'POST,HEAD add' => 'add',
                     'POST search' => 'search',
                     'PUT update/<id:\d+>' => 'update',
                     'DELETE delete/<id:\d+>' => 'delete',
@@ -65,7 +87,8 @@ $config = [
                     'POST datecount' => 'datecount',
                     'POST first' => 'first',
                     'POST firstlastdates' => 'firstlastdates',
-                    'GET index' => 'index'
+                    'GET index' => 'index',
+                    'GET last' => 'last'
 
                 ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
@@ -80,12 +103,18 @@ $config = [
                         'POST datecount' => 'datecount',
                         'POST first' => 'first',
                         'POST sendevent' => 'sendevent',
-                        'POST firstlastdates' => 'firstlastdates'
+                        'POST firstlastdates' => 'firstlastdates',
+                        'GET index' => 'index'
                     ]],
-					['class' => 'yii\rest\UrlRule', 'controller' => 'site'],
+					['class' => 'yii\rest\UrlRule', 'controller' => 'site', 'extraPatterns' => [
+
+                    ]],
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+//                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/default/<action>',
+//                '<module:\w+>/<controller:\w+>' => '<module>/default',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+
             ],
         ],
         

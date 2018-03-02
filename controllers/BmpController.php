@@ -4,38 +4,74 @@ namespace app\controllers;
 
 use app\models\Bmp180;
 use app\models\BmpSearch;
+use app\models\CriticalValues;
 use yii\helpers\Json;
 use yii\web\Response;
 use ElephantIO\Client;
 use ElephantIO\Engine\SocketIO\Version2X;
 use yii\filters\AccessControl;
+use yii\data\Pagination;
 
-class BmpController extends \yii\web\Controller
+
+class BmpController extends \yii\web\Controller implements ISensorController
 {
     public function actionIndex()
     {
-        return $this->render('index');
+        $query = Bmp180::find();
+
+        $pagination = new Pagination(['defaultPageSize' => 15,
+            'totalCount' => $query->count(),
+        ]);
+        $bmps = $query->orderBy('id')
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->all();
+
+        return $this->render('index',[
+            'bmps' => $bmps,
+            'pagination' => $pagination
+        ]);
     }
-    public function behaviors()
-    {
-        return ['access' => [
-            'class' => AccessControl::className(),
-            'rules' => [
-                [
-                    'allow' => true,
-                    'actions' => ['login', 'signup','add','search','update'
-                        ,'delete','last','get','datecount','first','firstlastdates','','index'],
-                    'roles' => ['?'],
-                ]
-            ]
-        ]];
-    }
+//    public function behaviors()
+//    {
+//        return ['access' => [
+//            'class' => AccessControl::className(),
+//            'rules' => [
+//                [
+//                    'allow' => true,
+//                    'actions' => ['login', 'signup','add','search','update'
+//                        ,'delete','last','get','datecount','first','firstlastdates','','index'],
+//                    'roles' => ['?'],
+//                ]
+//            ]
+//        ]];
+//    }
     public $enableCsrfValidation = false;
     public function actionTest()
     {
         var_dump("zzzzz");
     }
 
+    /**
+     * @SWG\Post(path="/bmps/add",
+     *     tags={"Bmp180"},
+     *     summary="Add bmp data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *        in = "body",
+     *        name = "body",
+     *        description = "BMP180 data",
+     *        required = true,
+     *         @SWG\Schema(ref="#/definitions/Bmp180")
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionAdd()
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
@@ -47,17 +83,48 @@ class BmpController extends \yii\web\Controller
         if ($data["Created_at"])
             $bmp->Created_at = date("Y-m-d H:i:s", strtotime($data["Created_at"]));
         else
-            $bmp->Created_at = date("Y-m-d H:i:s");
+            $bmp->Created_at = date("Y-m-d H:i:s",time());
         if ($data["Updated_at"])
             $bmp->Updated_at = date("Y-m-d H:i:s", strtotime($data["Updated_at"]));
         else
-            $bmp->Updated_at = date("Y-m-d H:i:s");
+            $bmp->Updated_at = date("Y-m-d H:i:s",time());
         $op_result = $bmp->save();
+        if ($bmp->Pressure > CriticalValues::$maxPressure || $bmp->Pressure < CriticalValues::$minPressure)
+        {
+            $client = new Client(new Version2X('https://raspi-info-bot.herokuapp.com'));
+
+            $client->initialize();
+            $client->emit('critical',['param' => 'pressure']);
+            $client->close();
+        }
         $res["result"] = $op_result;
         $result = Json::encode($res);
         \Yii::$app->response->content = $result;
     }
 
+    /**
+     * @SWG\Put(path="/bmps/update/{id}",
+     *     tags={"Bmp180"},
+     *     summary="Update bmp data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *        in = "body",
+     *        name = "body",
+     *        description = "BMP180 data",
+     *        required = true,
+     *         @SWG\Schema(ref="#/definitions/Bmp180")
+     *     ),
+     *     @SWG\Parameter(
+     *         ref="#/parameters/entity_id"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     function actionUpdate($id) {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
@@ -95,6 +162,22 @@ class BmpController extends \yii\web\Controller
         }
     }
 
+    /**
+     * @SWG\Delete(path="/bmps/delete/{id}",
+     *     tags={"Bmp180"},
+     *     summary="Delete bmp data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *         ref="#/parameters/entity_id"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/DhtData")
+     *     ),
+     * )
+     */
     public function actionDelete($id) {
 
         $bmp = Bmp180::findOne($id);
@@ -106,6 +189,26 @@ class BmpController extends \yii\web\Controller
     }
 
 
+    /**
+     * @SWG\Post(path="/bmps/search",
+     *     tags={"Bmp180"},
+     *     summary="Search bmp data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *       @SWG\Parameter(
+     *        in = "body",
+     *        name = "body",
+     *        description = "Search filter",
+     *        required = true,
+     *         @SWG\Schema(ref="#/definitions/BmpSearch")
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionSearch() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
@@ -147,6 +250,26 @@ class BmpController extends \yii\web\Controller
     }
 
 
+    /**
+     * @SWG\Post(path="/bmps/get/{id}",
+     *     tags={"Bmp180"},
+     *     summary="Get bmp data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *     in = "path",
+     *     name = "id",
+     *     description = "Entry id",
+     *     required = true,
+     *     type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionGet($id) {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $bmp = Bmp180::findOne($id);
@@ -155,6 +278,19 @@ class BmpController extends \yii\web\Controller
         \Yii::$app->response->content =$json;
     }
 
+    /**
+     * @SWG\Post(path="/bmps/last",
+     *     tags={"Bmp180"},
+     *     summary="Get last bmp entry",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionLast() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
@@ -178,6 +314,19 @@ class BmpController extends \yii\web\Controller
         \Yii::$app->response->content = $json;
     }
 
+    /**
+     * @SWG\Post(path="/bmps/first",
+     *     tags={"Bmp180"},
+     *     summary="Get first bmp entry",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionFirst() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
@@ -201,6 +350,19 @@ class BmpController extends \yii\web\Controller
         \Yii::$app->response->content = $json;
     }
 
+    /**
+     * @SWG\Post(path="/bmps/firstlastdates",
+     *     tags={"Bmp180"},
+     *     summary="Get corner dates",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionFirstlastdates() {
         $min = Bmp180::find()->min('id');
         $bmp_min = Bmp180::findOne($min);
@@ -214,6 +376,19 @@ class BmpController extends \yii\web\Controller
 
     }
 
+    /**
+     * @SWG\Post(path="/bmps/datecount",
+     *     tags={"Bmp180"},
+     *     summary="Get dates count",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Bmp180")
+     *     ),
+     * )
+     */
     public function actionDatecount() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $min = (new \yii\db\Query())->select('*')

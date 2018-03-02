@@ -17,10 +17,12 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.1.0",
         "luoxiaojun1992/yii2-tinker": "*",
         "rase/socket.io-emitter": "^0.7.0",
-        "wisembly/elephant.io": "^3.3"
+        "wisembly/elephant.io": "^3.3",
+        "dektrium/yii2-user": "^0.9.13",
+        "yii2mod/yii2-swagger": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
