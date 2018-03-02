@@ -1,10 +1,18 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: andre
+ * Date: 02.03.2018
+ * Time: 22:21
+ */
 
-namespace app\controllers;
+namespace app\modules\v1\controllers;
 
-use app\models\Bmp180;
-use app\models\BmpSearch;
-use app\models\CriticalValues;
+
+use yii\web\Controller;
+use app\modules\v1\models\Bmp180;
+use app\modules\v1\models\BmpSearch;
+use app\modules\v1\models\CriticalValues;
 use yii\helpers\Json;
 use yii\web\Response;
 use ElephantIO\Client;
@@ -12,8 +20,7 @@ use ElephantIO\Engine\SocketIO\Version2X;
 use yii\filters\AccessControl;
 use yii\data\Pagination;
 
-
-class BmpController extends \yii\web\Controller implements ISensorController
+class BmpController extends Controller implements ISensorController
 {
     public function actionIndex()
     {
@@ -53,7 +60,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/bmps/add",
+     * @SWG\Post(path="/api/v1/bmps/add",
      *     tags={"Bmp180"},
      *     summary="Add bmp data",
      *     produces={"application/json"},
@@ -103,7 +110,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Put(path="/bmps/update/{id}",
+     * @SWG\Put(path="/api/v1/bmps/update/{id}",
      *     tags={"Bmp180"},
      *     summary="Update bmp data",
      *     produces={"application/json"},
@@ -163,7 +170,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Delete(path="/bmps/delete/{id}",
+     * @SWG\Delete(path="/api/v1/bmps/delete/{id}",
      *     tags={"Bmp180"},
      *     summary="Delete bmp data",
      *     produces={"application/json"},
@@ -190,7 +197,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
 
 
     /**
-     * @SWG\Post(path="/bmps/search",
+     * @SWG\Post(path="/api/v1/bmps/search",
      *     tags={"Bmp180"},
      *     summary="Search bmp data",
      *     produces={"application/json"},
@@ -251,7 +258,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
 
 
     /**
-     * @SWG\Post(path="/bmps/get/{id}",
+     * @SWG\Post(path="/api/v1/bmps/get/{id}",
      *     tags={"Bmp180"},
      *     summary="Get bmp data",
      *     produces={"application/json"},
@@ -279,7 +286,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/bmps/last",
+     * @SWG\Post(path="/api/v1/bmps/last",
      *     tags={"Bmp180"},
      *     summary="Get last bmp entry",
      *     produces={"application/json"},
@@ -315,7 +322,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/bmps/first",
+     * @SWG\Post(path="/api/v1/bmps/first",
      *     tags={"Bmp180"},
      *     summary="Get first bmp entry",
      *     produces={"application/json"},
@@ -351,7 +358,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/bmps/firstlastdates",
+     * @SWG\Post(path="/api/v1/bmps/firstlastdates",
      *     tags={"Bmp180"},
      *     summary="Get corner dates",
      *     produces={"application/json"},
@@ -377,7 +384,7 @@ class BmpController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/bmps/datecount",
+     * @SWG\Post(path="/api/v1/bmps/datecount",
      *     tags={"Bmp180"},
      *     summary="Get dates count",
      *     produces={"application/json"},
@@ -392,10 +399,10 @@ class BmpController extends \yii\web\Controller implements ISensorController
     public function actionDatecount() {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $min = (new \yii\db\Query())->select('*')
-                    ->from('Bmp180')
-                    ->orderBy('Created_at')
-                    ->limit('1')
-                    ->all()[0]['Created_at'];
+            ->from('Bmp180')
+            ->orderBy('Created_at')
+            ->limit('1')
+            ->all()[0]['Created_at'];
 
         $max=(new \yii\db\Query())->select('*')
             ->from('Bmp180')

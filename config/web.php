@@ -8,21 +8,9 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'modules' => [
-        'swagger' => [
-            'class' => \ignatenkovnikita\swagger\Module::class,
-            //  'url' => '@web/swagger.json',
-        //    'url' => 'http://petstore.swagger.io/v2/swagger.json',
-            'path' => '@app/controllers',
-            // disable page with your logic
-            'isDisable' => function () {
-                return false;
-            },
-            // replace placeholders in swagger content
-            'afterRender' => function ($content) {
-                $content = str_replace('{{host}}', 'http://diplomaapi:8081', $content);
-                $content = str_replace('{{basePath}}', '', $content);
-                return $content;
-            }
+        'v1' => [
+            'basePath' => '@app/modules/v1',
+            'class' => 'app\modules\v1\Api'
         ]
     ],
     'aliases' => [
@@ -73,25 +61,7 @@ $config = [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-
-
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'dht',
-                'extraPatterns' => [
-                    'GET addd' => 'addd',
-                    'POST,HEAD add' => 'add',
-                    'POST search' => 'search',
-                    'PUT update/<id:\d+>' => 'update',
-                    'DELETE delete/<id:\d+>' => 'delete',
-                    'POST last' => 'last',
-                    'POST get/<id:\d+>' => 'get',
-                    'POST datecount' => 'datecount',
-                    'POST first' => 'first',
-                    'POST firstlastdates' => 'firstlastdates',
-                    'GET index' => 'index',
-                    'GET last' => 'last'
-
-                ]],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'bmp',
+                ['class' => 'yii\rest\UrlRule', 'prefix' => '/api', 'controller' => 'v1/bmp',
                     'extraPatterns' => [
                         'GET test' => 'test',
                         'POST add' => 'add',
@@ -106,14 +76,32 @@ $config = [
                         'POST firstlastdates' => 'firstlastdates',
                         'GET index' => 'index'
                     ]],
-					['class' => 'yii\rest\UrlRule', 'controller' => 'site', 'extraPatterns' => [
+
+                    ['class' => 'yii\rest\UrlRule', 'prefix' => '/api', 'controller' => 'v1/dht', 'extraPatterns' => [
+                        'GET addd' => 'addd',
+                        'POST,HEAD add' => 'add',
+                        'POST search' => 'search',
+                        'PUT update/<id:\d+>' => 'update',
+                        'DELETE delete/<id:\d+>' => 'delete',
+                        'POST last' => 'last',
+                        'POST get/<id:\d+>' => 'get',
+                        'POST datecount' => 'datecount',
+                        'POST first' => 'first',
+                        'POST firstlastdates' => 'firstlastdates',
+                        'GET index' => 'index',
+                        'GET last' => 'last'
 
                     ]],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/default', 'extraPatterns' => [
+
+                ]],
+//                    'api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                    'swagger' => 'v1/default/docs',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-//                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/default/<action>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/default/<action>',
 //                '<module:\w+>/<controller:\w+>' => '<module>/default',
-                '<controller:\w+>/<id:\d+>' => '<controller>/view',
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+//                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
 
             ],
         ],

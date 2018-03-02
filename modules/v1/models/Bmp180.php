@@ -1,9 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: andre
+ * Date: 02.03.2018
+ * Time: 22:28
+ */
 
-namespace app\models;
+namespace app\modules\v1\models;
 
 use Yii;
-
 /**
  * This is the model class for table "Bmp180".
  *

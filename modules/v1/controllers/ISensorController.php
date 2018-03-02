@@ -2,11 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: andre
- * Date: 28.02.2018
- * Time: 9:44
+ * Date: 02.03.2018
+ * Time: 22:20
  */
 
-namespace app\controllers;
+namespace app\modules\v1\controllers;
 
 
 interface ISensorController

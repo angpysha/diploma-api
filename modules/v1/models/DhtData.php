@@ -1,6 +1,11 @@
 <?php
-
-namespace app\models;
+/**
+ * Created by PhpStorm.
+ * User: andre
+ * Date: 02.03.2018
+ * Time: 20:16
+ */
+namespace app\modules\v1\models;
 
 use Yii;
 
@@ -36,7 +41,7 @@ class DhtData extends \yii\db\ActiveRecord
     {
         return [
             [['Temperature', 'Humidity'], 'number'],
-             [['Updated_at', 'Created_at'], 'safe'],
+            [['Updated_at', 'Created_at'], 'safe'],
         ];
     }
 

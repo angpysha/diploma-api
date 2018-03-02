@@ -1,41 +1,27 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: andre
+ * Date: 02.03.2018
+ * Time: 19:51
+ */
 
-namespace app\controllers;
-
-use app\models\DhtData;
-use app\models\DhtSearch;
+namespace app\modules\v1\controllers;
+use app\modules\v1\models\DhtData;
+use app\modules\v1\models\DhtSearch;
 use yii\helpers\Json;
+use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\AccessControl;
 use yii\data\Pagination;
-use app\models\CriticalValues;
+use app\modules\v1\models\CriticalValues;
 use ElephantIO\Client;
 use ElephantIO\Engine\SocketIO\Version2X;
 use yii\filters\auth\QueryParamAuth;
 
-/**
- * @SWG\Parameter(parameter="entity_id", name="id", type="integer", in="path")
- */
-class DhtController extends \yii\web\Controller implements ISensorController
+class DhtController extends Controller implements ISensorController
 {
-
-//    protected function verbs()
-//    {
-//        return [
-//            'index' => ['GET'],
-//        ];
-//    }
-
-//    public function behaviors()
-//    {
-//        $behaviors= parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class'=> QueryParamAuth::className(),
-//        ];
-//        return $behaviors;
-//    }
-
-    public $enableCsrfValidation = false;
+    public $enableCsrfValidation =false;
 
     public function actionIndex()
     {
@@ -67,7 +53,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/add",
+     * @SWG\Post(path="/api/v1/dhts/add",
      *     tags={"DhtData"},
      *     summary="Add dht data",
      *     produces={"application/json"},
@@ -121,7 +107,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Put(path="/dhts/update/{id}",
+     * @SWG\Put(path="/api/v1/dhts/update/{id}",
      *     tags={"DhtData"},
      *     summary="Update dht data",
      *     produces={"application/json"},
@@ -176,7 +162,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Delete(path="/dhts/delete/{id}",
+     * @SWG\Delete(path="/api/v1/dhts/delete/{id}",
      *     tags={"DhtData"},
      *     summary="Delete dht data",
      *     produces={"application/json"},
@@ -214,7 +200,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
      * To make this function  owrk you must to create JSON array and put it in request body
      */
     /**
-     * @SWG\Post(path="/dhts/search",
+     * @SWG\Post(path="/api/v1/dhts/search",
      *     tags={"DhtData"},
      *     summary="Search dht data",
      *     produces={"application/json"},
@@ -275,7 +261,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/get/{id}",
+     * @SWG\Post(path="/api/v1/dhts/get/{id}",
      *     tags={"DhtData"},
      *     summary="Get dht data",
      *     produces={"application/json"},
@@ -305,7 +291,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/last",
+     * @SWG\Post(path="/api/v1/dhts/last",
      *     tags={"DhtData"},
      *     summary="Get last dht entry",
      *     produces={"application/json"},
@@ -356,7 +342,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/first",
+     * @SWG\Post(path="/api/v1/dhts/first",
      *     tags={"DhtData"},
      *     summary="Get first dht entry",
      *     produces={"application/json"},
@@ -394,7 +380,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/firstlastdates",
+     * @SWG\Post(path="/api/v1/dhts/firstlastdates",
      *     tags={"DhtData"},
      *     summary="Get corner dates",
      *     produces={"application/json"},
@@ -422,7 +408,7 @@ class DhtController extends \yii\web\Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/dhts/datecount",
+     * @SWG\Post(path="/api/v1/dhts/datecount",
      *     tags={"DhtData"},
      *     summary="Get dates count",
      *     produces={"application/json"},
@@ -458,6 +444,4 @@ class DhtController extends \yii\web\Controller implements ISensorController
 
         \Yii::$app->response->content = $ret;
     }
-
-
 }

@@ -2,11 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: andre
- * Date: 13.01.2018
- * Time: 18:11
+ * Date: 02.03.2018
+ * Time: 22:29
  */
 
-namespace app\models;
+namespace app\modules\v1\models;
+
+
+use yii\base\Model;
 
 /** @SWG\Definition()
  *

@@ -2,13 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: andre
- * Date: 08.02.2018
- * Time: 16:55
+ * Date: 02.03.2018
+ * Time: 22:24
  */
 
-namespace app\models;
+namespace app\modules\v1\models;
 
-class CriticalValues {
+
+class CriticalValues
+{
     public static $maxTemperature = 27;
     public static $minTemperature = 18;
 

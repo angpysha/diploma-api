@@ -1,9 +1,15 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: andre
+ * Date: 02.03.2018
+ * Time: 22:22
+ */
 
-namespace app\models;
-
+namespace app\modules\v1\models;
 use Yii;
 use yii\base\Model;
+
 /** @SWG\Definition()
  *
  * @SWG\Property(property="id", type="integer")
@@ -14,7 +20,8 @@ use yii\base\Model;
  * @SWG\Property(property="beginDate", type="date")
  * @SWG\Property(property="endDate", type="date")
  */
-class DhtSearch extends Model {
+class DhtSearch extends Model
+{
     public $beginDate;
     public $endDate;
     public $beginTemperature;
@@ -44,4 +51,4 @@ class DhtSearch extends Model {
             $this->{$key} = $value;
         }
     }
-} 
+}
