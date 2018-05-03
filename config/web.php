@@ -97,6 +97,8 @@ $config = [
                 ]],
 //                    'api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                     'swagger' => 'v1/default/docs',
+                    'dht' => 'v1/dhts/index',
+                    'bmp' => 'v1/bmps/index',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/default/<action>',
 //                '<module:\w+>/<controller:\w+>' => '<module>/default',
