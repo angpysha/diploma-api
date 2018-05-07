@@ -22,7 +22,8 @@
         "rase/socket.io-emitter": "^0.7.0",
         "wisembly/elephant.io": "^3.3",
         "dektrium/yii2-user": "^0.9.13",
-        "yii2mod/yii2-swagger": "*"
+        "yii2mod/yii2-swagger": "*",
+        "2amigos/yii2-chartjs-widget": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

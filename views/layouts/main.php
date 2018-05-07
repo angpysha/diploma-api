@@ -23,6 +23,14 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <link rel="stylesheet" href="css/site.css"/>
+    <style>
+        .chartstyle {
+            width:400px !important;
+            height: 400px!important;
+            /*border: #0f0f0f solid 1px;*/
+        }
+    </style>
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -40,8 +48,8 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'DHT11', 'url' => ['/dhts/index']],
-            ['label' => 'BMP180','url' => ['/bmps']],
+            ['label' => 'DHT11', 'url' => ['/api/v1/dhts/index']],
+            ['label' => 'BMP180','url' => ['/api/v1/bmps']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
