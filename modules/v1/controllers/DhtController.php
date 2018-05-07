@@ -41,6 +41,54 @@ class DhtController extends Controller implements ISensorController
         ]);
     }
 
+    public function actionChart($id) {
+        $min = (new \yii\db\Query())->select('*')
+            ->from('DhtData')
+            ->orderBy('Created_at')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+
+        $max=(new \yii\db\Query())->select('*')
+            ->from('DhtData')
+            ->orderBy('Created_at DESC')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+////        $res['min'] = $min;
+////        $res['max'] = $max;
+        $date1 = new \DateTime(date('Y-m-d',strtotime($min)));
+        $date2 = new \DateTime(date('Y-m-d',strtotime($max)));
+        $diff = $date1->diff($date2)->days;
+        $datet = strtotime('today midnight');
+        $datettt= date("Y-m-d H:i:s",$datet);
+        $dateBegin = strtotime('-'.strval($id-1).' day', $datet);
+        $dateBegint = date("Y-m-d H:i:s",$dateBegin);
+        $dateAfter = strtotime('-'.strval($id-2).' day', $datet);
+        $dateAftert = date("Y-m-d H:i:s",$dateAfter);
+        $records = DhtData::find();
+        $records = $records->andWhere(['>=','Created_at',$dateBegint]);
+        $records = $records->andWhere(['<=','Created_at',$dateAftert]);
+        $records = $records->asArray()->all();
+        $reccount = count($records);
+        $dateee = date("d-m-Y",$dateBegin);
+        $dates = array();
+        $temps = array();
+        $hum = array();
+        for ($i = 0;$i<$reccount;$i++) {
+            $dates[$i]=date('H',strtotime($records[$i]["Created_at"]));
+            $temps[$i]=$records[$i]["Temperature"];
+            $hum[$i]=$records[$i]["Humidity"];
+        }
+        //    var_dump($dates);
+        return $this->render('chart',[
+            'dates' => $dates,
+            'temps' => $temps,
+            'datee' => $dateee,
+            'pagenum' => $id,
+            'totalpages' => $diff,
+            'hum' => $hum
+        ]);
+    }
+
     public function actionAddd()
     {
         // $param1 = Yii::$app->request->post('param1', null);
@@ -53,7 +101,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/add",
+     * @SWG\Post(path="/web/api/v1/dhts/add",
      *     tags={"DhtData"},
      *     summary="Add dht data",
      *     produces={"application/json"},
@@ -79,11 +127,11 @@ class DhtController extends Controller implements ISensorController
         $dht = new DHtData();
         $dht->Temperature = $data["Temperature"];
         $dht->Humidity = $data["Humidity"];
-        if ($data["Created_at"])
+        if (array_key_exists("Created_at",$data) && $data["Created_at"])
             $dht->Created_at = date("Y-m-d H:i:s", strtotime($data["Created_at"]));
         else
             $dht->Created_at = date("Y-m-d H:i:s", time());
-        if ($data["Updated_at"])
+        if (array_key_exists("Updated_at",$data) && $data["Updated_at"])
             $dht->Updated_at = date("Y-m-d H:i:s", strtotime($data["Updated_at"]));
         else
             $dht->Updated_at = date("Y-m-d H:i:s", time());
@@ -107,7 +155,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Put(path="/api/v1/dhts/update/{id}",
+     * @SWG\Put(path="/web/api/v1/dhts/update/{id}",
      *     tags={"DhtData"},
      *     summary="Update dht data",
      *     produces={"application/json"},
@@ -162,7 +210,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Delete(path="/api/v1/dhts/delete/{id}",
+     * @SWG\Delete(path="/web/api/v1/dhts/delete/{id}",
      *     tags={"DhtData"},
      *     summary="Delete dht data",
      *     produces={"application/json"},
@@ -200,7 +248,7 @@ class DhtController extends Controller implements ISensorController
      * To make this function  owrk you must to create JSON array and put it in request body
      */
     /**
-     * @SWG\Post(path="/api/v1/dhts/search",
+     * @SWG\Post(path="/web/api/v1/dhts/search",
      *     tags={"DhtData"},
      *     summary="Search dht data",
      *     produces={"application/json"},
@@ -261,7 +309,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/get/{id}",
+     * @SWG\Post(path="/web/api/v1/dhts/get/{id}",
      *     tags={"DhtData"},
      *     summary="Get dht data",
      *     produces={"application/json"},
@@ -291,7 +339,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/last",
+     * @SWG\Post(path="/web/api/v1/dhts/last",
      *     tags={"DhtData"},
      *     summary="Get last dht entry",
      *     produces={"application/json"},
@@ -342,7 +390,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/first",
+     * @SWG\Post(path="/web/api/v1/dhts/first",
      *     tags={"DhtData"},
      *     summary="Get first dht entry",
      *     produces={"application/json"},
@@ -380,7 +428,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/firstlastdates",
+     * @SWG\Post(path="/web/api/v1/dhts/firstlastdates",
      *     tags={"DhtData"},
      *     summary="Get corner dates",
      *     produces={"application/json"},
@@ -408,7 +456,7 @@ class DhtController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/dhts/datecount",
+     * @SWG\Post(path="/web/api/v1/dhts/datecount",
      *     tags={"DhtData"},
      *     summary="Get dates count",
      *     produces={"application/json"},

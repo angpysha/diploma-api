@@ -33,7 +33,7 @@ class BmpController extends Controller implements ISensorController
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
-
+    //   var_dump($bmps[0]->Temperature);
         return $this->render('index',[
             'bmps' => $bmps,
             'pagination' => $pagination
@@ -60,7 +60,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/add",
+     * @SWG\Post(path="/web/api/v1/bmps/add",
      *     tags={"Bmp180"},
      *     summary="Add bmp data",
      *     produces={"application/json"},
@@ -87,11 +87,11 @@ class BmpController extends Controller implements ISensorController
         $bmp->Temperature = $data["Temperature"];
         $bmp->Altitude = $data["Altitude"];
         $bmp->Pressure = $data["Pressure"];
-        if ($data["Created_at"])
+        if (array_key_exists("Created_at",$data) && $data["Created_at"])
             $bmp->Created_at = date("Y-m-d H:i:s", strtotime($data["Created_at"]));
         else
             $bmp->Created_at = date("Y-m-d H:i:s",time());
-        if ($data["Updated_at"])
+        if (array_key_exists("Updated_at",$data) && $data["Updated_at"])
             $bmp->Updated_at = date("Y-m-d H:i:s", strtotime($data["Updated_at"]));
         else
             $bmp->Updated_at = date("Y-m-d H:i:s",time());
@@ -110,7 +110,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Put(path="/api/v1/bmps/update/{id}",
+     * @SWG\Put(path="/web/api/v1/bmps/update/{id}",
      *     tags={"Bmp180"},
      *     summary="Update bmp data",
      *     produces={"application/json"},
@@ -169,8 +169,60 @@ class BmpController extends Controller implements ISensorController
         }
     }
 
+    function actionChart($id) {
+//        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $min = (new \yii\db\Query())->select('*')
+            ->from('Bmp180')
+            ->orderBy('Created_at')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+
+        $max=(new \yii\db\Query())->select('*')
+            ->from('Bmp180')
+            ->orderBy('Created_at DESC')
+            ->limit('1')
+            ->all()[0]['Created_at'];
+////        $res['min'] = $min;
+////        $res['max'] = $max;
+        $date1 = new \DateTime(date('Y-m-d',strtotime($min)));
+        $date2 = new \DateTime(date('Y-m-d',strtotime($max)));
+        $diff = $date1->diff($date2)->days;
+        $pagination = new Pagination(['defaultPageSize' => 15,
+            'totalCount' => $diff,
+        ]);
+        $datet = strtotime('today midnight');
+        $datettt= date("Y-m-d H:i:s",$datet);
+        $dateBegin = strtotime('-'.strval($id-1).' day', $datet);
+        $dateBegint = date("Y-m-d H:i:s",$dateBegin);
+        $dateAfter = strtotime('-'.strval($id-2).' day', $datet);
+        $dateAftert = date("Y-m-d H:i:s",$dateAfter);
+        $records = Bmp180::find();
+        $records = $records->andWhere(['>=','Created_at',$dateBegint]);
+        $records = $records->andWhere(['<=','Created_at',$dateAftert]);
+        $records = $records->asArray()->all();
+        $reccount = count($records);
+        $dateee = date("d-m-Y",$dateBegin);
+        $dates = array();
+        $temps = array();
+        $pres = array();
+        for ($i = 0;$i<$reccount;$i++) {
+            $dates[$i]=date('H',strtotime($records[$i]["Created_at"]));
+            $temps[$i]=$records[$i]["Temperature"];
+            $pres[$i]=$records[$i]["Pressure"];
+        }
+        //    var_dump($dates);
+       return $this->render('chart',[
+         'dates' => $dates,
+            'temps' => $temps,
+           'datee' => $dateee,
+           'pagenum' => $id,
+           'totalpages' => $diff,
+           'pres' => $pres
+        ]);
+    }
+
     /**
-     * @SWG\Delete(path="/api/v1/bmps/delete/{id}",
+     * @SWG\Delete(path="/web/api/v1/bmps/delete/{id}",
      *     tags={"Bmp180"},
      *     summary="Delete bmp data",
      *     produces={"application/json"},
@@ -197,7 +249,7 @@ class BmpController extends Controller implements ISensorController
 
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/search",
+     * @SWG\Post(path="/web/api/v1/bmps/search",
      *     tags={"Bmp180"},
      *     summary="Search bmp data",
      *     produces={"application/json"},
@@ -258,7 +310,7 @@ class BmpController extends Controller implements ISensorController
 
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/get/{id}",
+     * @SWG\Post(path="/web/api/v1/bmps/get/{id}",
      *     tags={"Bmp180"},
      *     summary="Get bmp data",
      *     produces={"application/json"},
@@ -286,7 +338,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/last",
+     * @SWG\Post(path="/web/api/v1/bmps/last",
      *     tags={"Bmp180"},
      *     summary="Get last bmp entry",
      *     produces={"application/json"},
@@ -322,7 +374,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/first",
+     * @SWG\Post(path="/web/api/v1/bmps/first",
      *     tags={"Bmp180"},
      *     summary="Get first bmp entry",
      *     produces={"application/json"},
@@ -358,7 +410,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/firstlastdates",
+     * @SWG\Post(path="/web/api/v1/bmps/firstlastdates",
      *     tags={"Bmp180"},
      *     summary="Get corner dates",
      *     produces={"application/json"},
@@ -384,7 +436,7 @@ class BmpController extends Controller implements ISensorController
     }
 
     /**
-     * @SWG\Post(path="/api/v1/bmps/datecount",
+     * @SWG\Post(path="/web/api/v1/bmps/datecount",
      *     tags={"Bmp180"},
      *     summary="Get dates count",
      *     produces={"application/json"},
