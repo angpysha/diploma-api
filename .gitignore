@@ -29,7 +29,6 @@ phpunit.phar
 tests/_output/*
 tests/_support/_generated
 
-assets/*
 !assets/.gitignore
 protected/runtime/*
 !protected/runtime/.gitignore

@@ -74,7 +74,8 @@ $config = [
                         'POST first' => 'first',
                         'POST sendevent' => 'sendevent',
                         'POST firstlastdates' => 'firstlastdates',
-                        'GET index' => 'index'
+                        'GET index' => 'index',
+                        'GET charts/<id:\d+>' => 'chart'
                     ]],
 
                     ['class' => 'yii\rest\UrlRule', 'prefix' => '/api', 'controller' => 'v1/dht', 'extraPatterns' => [
@@ -89,7 +90,8 @@ $config = [
                         'POST first' => 'first',
                         'POST firstlastdates' => 'firstlastdates',
                         'GET index' => 'index',
-                        'GET last' => 'last'
+                        'GET last' => 'last',
+                        'GET charts/<id:\d+>' => 'chart'
 
                     ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/default', 'extraPatterns' => [
@@ -97,10 +99,12 @@ $config = [
                 ]],
 //                    'api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                     'swagger' => 'v1/default/docs',
-                    'dht' => 'v1/dhts/index',
-                    'bmp' => 'v1/bmps/index',
+                    'dhts' => 'v1/dht/index',
+                    'bmps' => 'v1/bmp/index',
+                    'bmps/charts/<id:\d+>' => 'v1/bmp/charts/<id:\d+>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/default/<action>',
+                '' => 'site/index'
 //                '<module:\w+>/<controller:\w+>' => '<module>/default',
 //                '<controller:\w+>/<id:\d+>' => '<controller>/view',
 //                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',

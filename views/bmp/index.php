@@ -14,7 +14,9 @@ use yii\widgets\LinkPager;
         <th>Date</th>
         </thead>
         <tbody>
+        <? echo $bmps ?>
         <? foreach ($bmps as $bmp): ?>
+
             <tr >
                 <td class="text-center"><? echo $bmp->Temperature ?></td>
                 <td class="text-center"> <? echo $bmp->Altitude ?> </td>

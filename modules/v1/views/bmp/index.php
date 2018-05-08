@@ -14,14 +14,14 @@ use yii\widgets\LinkPager;
         <th>Date</th>
         </thead>
         <tbody>
-        <? foreach ($bmps as $bmp): ?>
+        <?php foreach ($bmps as $bmp): ?>
             <tr >
-                <td class="text-center"><? echo $bmp->Temperature ?></td>
-                <td class="text-center"> <? echo $bmp->Altitude ?> </td>
-                <td class="text-center"> <? echo $bmp->Pressure ?> </td>
-                <td class="text-center"> <? echo $bmp->Created_at ?></td>
+                <td class="text-center"><?php echo $bmp->Temperature ?></td>
+                <td class="text-center"> <?php echo $bmp->Altitude ?> </td>
+                <td class="text-center"> <?php echo $bmp->Pressure ?> </td>
+                <td class="text-center"> <?php echo $bmp->Created_at ?></td>
             </tr>
-        <? endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>

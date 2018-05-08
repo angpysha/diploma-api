@@ -13,13 +13,13 @@ use yii\widgets\LinkPager;
             <th>Date</th>
         </thead>
         <tbody>
-        <? foreach ($dhts as $dht): ?>
+        <?php foreach ($dhts as $dht): ?>
             <tr >
-                <td class="text-center"><? echo $dht->Temperature ?></td>
-                <td class="text-center"> <? echo $dht->Humidity ?> </td>
-                <td class="text-center"> <? echo $dht->Created_at ?></td>
+                <td class="text-center"><?php echo $dht->Temperature ?></td>
+                <td class="text-center"> <?php echo $dht->Humidity ?> </td>
+                <td class="text-center"> <?php echo $dht->Created_at ?></td>
             </tr>
-        <? endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>

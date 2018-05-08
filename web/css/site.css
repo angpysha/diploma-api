@@ -113,3 +113,8 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.chartstyle {
+    width: 250px !important;
+    height: 150px!important;
+}
