@@ -65,37 +65,37 @@ use yii\widgets\LinkPager;
     <div class="col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2 col-md-6 col-lg-6">
         <div class="btn-group">
             <?php if($pagenum!=1): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval(1) ?> > <span class="glyphicon glyphicon-fast-backward"></span> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval(1) ?> > <span class="glyphicon glyphicon-fast-backward"></span> </a>
             <?php endif; ?>
             <?php if($pagenum-1>0): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum-1) ?> > <span class="glyphicon glyphicon-step-backward"></span> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum-1) ?> > <span class="glyphicon glyphicon-step-backward"></span> </a>
             <?php endif; ?>
             <?php if($pagenum-3>0): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum-3) ?> ><?php echo strval($pagenum-3) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum-3) ?> ><?php echo strval($pagenum-3) ?> </a>
             <?php endif; ?>
             <?php if($pagenum-2>0): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum-2) ?> ><?php echo strval($pagenum-2) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum-2) ?> ><?php echo strval($pagenum-2) ?> </a>
             <?php endif; ?>
             <?php if($pagenum-1>0): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum-1) ?> ><?php echo strval($pagenum-1) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum-1) ?> ><?php echo strval($pagenum-1) ?> </a>
             <?php endif; ?>
             <?php if($pagenum>0): ?>
-                <a class="btn btn-info btn-disabled" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum) ?> ><?php echo strval($pagenum) ?> </a>
+                <a class="btn btn-info btn-disabled" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum) ?> ><?php echo strval($pagenum) ?> </a>
             <?php endif; ?>
             <?php if($pagenum+1<$totalpages): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum+1) ?> ><?php echo strval($pagenum+1) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum+1) ?> ><?php echo strval($pagenum+1) ?> </a>
             <?php endif; ?>
             <?php if($pagenum+2<$totalpages): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum+2) ?> ><?php echo strval($pagenum+2) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum+2) ?> ><?php echo strval($pagenum+2) ?> </a>
             <?php endif; ?>
             <?php if($pagenum+3<$totalpages): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum+3) ?> ><?php echo strval($pagenum+3) ?> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum+3) ?> ><?php echo strval($pagenum+3) ?> </a>
             <?php endif; ?>
             <?php if($pagenum+1<$totalpages): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($pagenum+1) ?> ><span class="glyphicon glyphicon-step-forward"></span> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($pagenum+1) ?> ><span class="glyphicon glyphicon-step-forward"></span> </a>
             <?php endif; ?>
             <?php if($pagenum!=$totalpages): ?>
-                <a class="btn btn-default" href=<?php echo "/web/api/v1/bmps/charts/".strval($totalpages) ?> ><span class="glyphicon glyphicon-fast-forward"> </span> </a>
+                <a class="btn btn-default" href=<?php echo "/web/api/v1/dhts/charts/".strval($totalpages) ?> ><span class="glyphicon glyphicon-fast-forward"> </span> </a>
             <?php endif; ?>
         </div>
     </div>
