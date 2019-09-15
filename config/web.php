@@ -18,6 +18,14 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://localhost:27017/diploma'
+            // 'options' => [
+            //     "username" => "",
+            //     "password" => ""
+            // ]
+            ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'uAhW_l_LuBQhk2VfzsIYUhtDwCUx9TlU',
@@ -93,6 +101,12 @@ $config = [
                         'GET last' => 'last',
                         'GET charts/<id:\d+>' => 'chart'
 
+                    ]],
+                    ['class' => 'yii\rest\UrlRule', 'prefix' => '/api', 'controller' => 'v1/sensor', 'extraPatterns' => [
+                        'POST add' => 'add',
+                        'GET test' => 'test',
+                        'GET getall' => 'getall',
+                        'POST getbytype' => 'getbytype'
                     ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/default', 'extraPatterns' => [
 

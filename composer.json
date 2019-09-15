@@ -23,7 +23,8 @@
         "wisembly/elephant.io": "^3.3",
         "dektrium/yii2-user": "^0.9.13",
         "yii2mod/yii2-swagger": "*",
-        "2amigos/yii2-chartjs-widget": "~2.0"
+        "2amigos/yii2-chartjs-widget": "~2.0",
+        "yiisoft/yii2-mongodb": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
