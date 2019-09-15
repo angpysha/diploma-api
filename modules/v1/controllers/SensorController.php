@@ -63,4 +63,22 @@ class SensorController extends Controller
         \Yii::$app->response->content = $json;
     }
 
+    public function actionUpdate($id) 
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $inputdata = Json::decode(\Yii::$app->request->getRawBody());
+
+        $data = Sensor::findOne($id);
+        $data["name"] = $inputdata["type"];
+        $data["data"] = $inputdata["data"];
+        $data->save();
+        var_dump($parama);
+    }
+
+    public function actionDelete($id) 
+    {
+        $data = Sensor::findOne($id);
+        $data->delete();
+    }
+
 }
