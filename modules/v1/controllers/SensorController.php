@@ -30,15 +30,16 @@ class SensorController extends Controller
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Json::decode(\Yii::$app->request->getRawBody());
-    //    // var_dump($data);
-    //     $save_data = new Sensor();
-    //     $save_data["name"] =$data["name"];
-    //     $save_data["data"] = $save_data["data"];
-  //  var_dump(Yii::$app);
+        $count = count(array_keys($data));
+        $indexes = array_keys($data);
+
+        $data1 = array();
+        for ($i = 0;$i < $count; $i++) {
+            $data1[$indexes[$i]] = $data[$indexes[$i]];
+
+        }
         $collection = Yii::$app->mongodb->getCollection('sensordata');
-        $collection->insert(['name' => $data["name"],'data' => $data["data"]]);
-        // $save_data->save(false);
-       // $collection->save();
+        $collection->insert($data1);
     }
 
     public function actionTest() 
@@ -49,8 +50,11 @@ class SensorController extends Controller
     public function actionGetall() 
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
-        $data = Sensor::find()->all();
+        $collection = Yii::$app->mongodb->getCollection('sensordata');
+        $data = $collection->find([]);
+        $data = $data;
         $json = JSON::encode($data);
+        $json= $json;
         \Yii::$app->response->content = $json;
     }
 
