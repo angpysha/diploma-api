@@ -38,6 +38,8 @@ class SensorController extends Controller
             $data1[$indexes[$i]] = $data[$indexes[$i]];
 
         }
+
+        $data1["date"] = (new \DateTime())->format('Y-m-d H:i:s');
         $collection = Yii::$app->mongodb->getCollection('sensordata');
         $collection->insert($data1);
     }
@@ -62,27 +64,105 @@ class SensorController extends Controller
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $inputdata = Json::decode(\Yii::$app->request->getRawBody());
-        $data = Sensor::find()->where(['name' =>$inputdata["type"]])->offset($inputdata["skip"])->limit($inputdata["take"])->all();
+        $query = new Query();
+        $data = $query->select([])->from('sensordata')->where(['type' => $inputdata["type"]])->offset($inputdata["skip"])->limit($inputdata["take"])->all();
         $json = JSON::encode($data);
+        // $collection = Yii::$app->mongodb->getCollection('sensordata');
+     //   $inputdata = Json::decode(\Yii::$app->request->getRawBody());
+        // $data = Sensor::find()->where(['name' =>$inputdata["type"]])->offset($inputdata["skip"])->limit($inputdata["take"])->all();
+        // $json = JSON::encode($data);
         \Yii::$app->response->content = $json;
     }
 
     public function actionUpdate($id) 
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
+        
         $inputdata = Json::decode(\Yii::$app->request->getRawBody());
+       
+        $collection = Yii::$app->mongodb->getCollection('sensordata');
+        $count = count(array_keys($inputdata));
+        $indexes = array_keys($inputdata);
+        $data = array();
+        for ($i = 0;$i < $count; $i++) {
+            $data[$indexes[$i]] = $inputdata[$indexes[$i]];
 
-        $data = Sensor::findOne($id);
-        $data["name"] = $inputdata["type"];
-        $data["data"] = $inputdata["data"];
-        $data->save();
-        var_dump($parama);
+        }
+
+        $collection->update(['_id' => $id],$data);
+        // $data = Sensor::findOne($id);
+        // $data["name"] = $inputdata["type"];
+        // $data["data"] = $inputdata["data"];
+        // $data->save();
+        // var_dump($parama);
     }
 
     public function actionDelete($id) 
     {
-        $data = Sensor::findOne($id);
-        $data->delete();
+       $collection = Yii::$app->mongodb->getCollection('sensordata');
+       //$query = new Query();
+       //$data = $query->select([])->from('sensordata')->where(['_id' => $id])->limit(1)->all();
+       $data = $collection->findOne(['_id' => $id]);
+       $collection->remove($data);
+
+     // $json = JSON::encode($data);
+     // \Yii::$app->response->content = $json;
+
+      //  $data = Sensor::findOne($id);
+      //  $data->delete();
+    }
+
+    /**
+     * @SWG\Post(path="/web/api/v1/sensors/get/{id}",
+     *     tags={"Sensor"},
+     *     summary="Get sensor data",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *     in = "path",
+     *     name = "id",
+     *     description = "Entry id",
+     *     required = true,
+     *     type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(ref = "#/definitions/Sensor")
+     *     ),
+     * )
+     */
+    public function actionGet($id) {
+        $collection = Yii::$app->mongodb->getCollection('sensordata');
+        //$query = new Query();
+        //$data = $query->select([])->from('sensordata')->where(['_id' => $id])->limit(1)->all();
+        $data = $collection->findOne(['_id' => $id]);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $json = JSON::encode($data);
+        \Yii::$app->response->content = $json;
+    }
+
+    public function actionSearch() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $inputdata = Json::decode(\Yii::$app->request->getRawBody());
+        $query = new Query();
+        $date1 = $inputdata["datefrom"];
+        $date2 = $inputdata["dateto"];
+        $data = $query->select([])->from('sensordata')->where(['>=','date',$date1])->andWhere(['<=','date',$date2])->all();
+        
+        $json = JSON::encode($data);
+        \Yii::$app->response->content = $json;
+
+
+        
+    }
+
+    public function actionGetByDate() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        $inputdata = Json::decode(\Yii::$app->request->getRawBody());
+
+
     }
 
 }

@@ -56,7 +56,7 @@ class BmpController extends Controller implements ISensorController
     public $enableCsrfValidation = false;
     public function actionTest()
     {
-        var_dump("zzzzz");
+        phpinfo();
     }
 
     /**

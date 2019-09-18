@@ -107,8 +107,10 @@ $config = [
                         'GET test' => 'test',
                         'GET getall' => 'getall',
                         'POST getbytype' => 'getbytype',
-                        'POST update/<id:\w+>' => 'update',
-                        'DELETE delete/<id:\w+>' => 'delete'
+                        'PUT update/<id:\w+>' => 'update',
+                        'DELETE delete/<id:\w+>' => 'delete',
+                        'GET get/<id:\w+>' => 'get',
+                        'POST search' => 'search'
                     ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/default', 'extraPatterns' => [
 
