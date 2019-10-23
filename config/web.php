@@ -110,7 +110,9 @@ $config = [
                         'PUT update/<id:\w+>' => 'update',
                         'DELETE delete/<id:\w+>' => 'delete',
                         'GET get/<id:\w+>' => 'get',
-                        'POST search' => 'search'
+                        'POST search' => 'search',
+                        'GET getlast' => 'getlast',
+                        'GET allsensors' => 'getconnectedsensors'
                     ]],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/default', 'extraPatterns' => [
 

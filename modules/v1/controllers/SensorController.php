@@ -38,8 +38,9 @@ class SensorController extends Controller
             $data1[$indexes[$i]] = $data[$indexes[$i]];
 
         }
-
-        $data1["date"] = (new \DateTime())->format('Y-m-d H:i:s');
+        $datetime = new \DateTime();
+        $datetime->add(new \DateInterval("PT3H"));
+        $data1["date"] = $datetime->format('Y-m-d H:i:s');
         $collection = Yii::$app->mongodb->getCollection('sensordata');
         $collection->insert($data1);
     }
@@ -148,8 +149,22 @@ class SensorController extends Controller
         $query = new Query();
         $date1 = $inputdata["datefrom"];
         $date2 = $inputdata["dateto"];
-        $data = $query->select([])->from('sensordata')->where(['>=','date',$date1])->andWhere(['<=','date',$date2])->all();
+
+        $data = $query->select([])->from('sensordata');
+
+        if ($inputdata["type"])
+        {
+            $data = $data->andWhere(["type" => $inputdata["type"]]);
+        }
         
+        if ($date1) {
+            $data = $data->andWhere([">=","date",$date1]);
+        }
+
+        if ($date2) {
+            $data = $data->andWhere(["<=","date",$date2]);
+        }
+        $data = $data->all();
         $json = JSON::encode($data);
         \Yii::$app->response->content = $json;
 
@@ -164,5 +179,35 @@ class SensorController extends Controller
 
 
     }
+
+    public function actionGetlast() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $collection = Yii::$app->mongodb->getCollection('sensordata');
+        $data = $collection->distinct("type");
+       
+       // var_dump($data);
+        $returnData = array();
+
+        foreach ($data as $item) {
+            $query = new Query();
+            $sdata = $query->select([])->from('sensordata')->where(['type' => $item])->orderBy(['_id' => SORT_DESC])->one();
+           // var_dump($sdata);
+            $returnData[$item] = $sdata;
+           // $sensorItem = $collection->
+        }
+      //  var_dump($returnData);
+        $json = JSON::encode($returnData);
+        \Yii::$app->response->content = $json;
+    }
+
+    public function actionGetconnectedsensors() {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $collection = Yii::$app->mongodb->getCollection('sensordata');
+        $data = $collection->distinct("type");
+
+        $json = JSON::encode($data);
+        \Yii::$app->response->content = $json;
+    }
+
 
 }
